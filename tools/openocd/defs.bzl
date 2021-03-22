@@ -82,6 +82,8 @@ Example:
 )
 
 def _openocd_debug_server_impl(ctx):
+    # is_windows = "windows" in ctx.var['TARGET_CPU']
+    is_windows = ctx.host_configuration.host_path_separator == ";"
     interface_config_string = ""
     for config in ctx.attr.interface_configs:
         interface_config_string = interface_config_string + " -f " + config
@@ -92,20 +94,66 @@ def _openocd_debug_server_impl(ctx):
     if ctx.attr.transport:
         transport_string = "-c \"transport select %s\"" % (ctx.attr.transport)
     script_template = """
-{openocd} {interface_config_string} {transport_string} -c "adapter_khz {programmer_frequency}" {chip_config_string}
+{openocd} {interface_config_string} {transport_string} -c "adapter speed {programmer_frequency}" {chip_config_string}
 
 """
 
-    script = ctx.actions.declare_file("%s.sh" % ctx.label.name)
-    script_content = script_template.format(
-        openocd = ctx.file._openocd.short_path,
-        interface_config_string = interface_config_string,
-        chip_config_string = chip_config_string,
-        programmer_frequency = ctx.attr.programmer_frequency,
-        transport_string = transport_string,
-    )
+    script_content = ""
+    if is_windows:
+        # A bit of a hacky way to do this... The issue is Windows does not support
+        # symlinks which does not work well for runfiles in particular. To enable them
+        # the user must use Developer Mode, also not ideal. Instead:
+        # 1) Use the 'symlink' as a generic path to the root of openocd
+        # 2) Open the MANIFEST file (non-standard format, beware for future versions)
+        # 3) Find com_openocd and use the full path to the symlink
+        # 4) In batch script, cd to base of tool and call bin/openocd.exe directly
+        windows_script_prepend = """
+@echo off
+for /f "tokens=*" %%a in (MANIFEST) do call :SEARCH %%a %%a
+
+:SEARCH
+set str1=%1
+if /i "%str1:~0,11%"=="com_openocd" goto FOUND
+
+goto FAIL
+
+:FOUND
+for %%i in (%2) do call :MAKEPATH %%~di%%~pi
+
+goto EOF
+
+:MAKEPATH
+cd %1
+
+
+"""
+        windows_script_append = """
+goto EOF
+
+:FAIL
+
+:EOF
+
+"""
+        script = ctx.actions.declare_file("%s.bat" % ctx.label.name)
+        script_content = windows_script_prepend + script_template.format(
+            openocd = "\"bin/openocd.exe\"",
+            interface_config_string = interface_config_string,
+            chip_config_string = chip_config_string,
+            programmer_frequency = ctx.attr.programmer_frequency,
+            transport_string = transport_string,
+        ) + windows_script_append
+    else:
+        script = ctx.actions.declare_file("%s.sh" % ctx.label.name)
+        script_content = script_template.format(
+            openocd = ctx.file._openocd.short_path,
+            interface_config_string = interface_config_string,
+            chip_config_string = chip_config_string,
+            programmer_frequency = ctx.attr.programmer_frequency,
+            transport_string = transport_string,
+        )
     ctx.actions.write(script, script_content, is_executable = True)
-    runfiles = ctx.runfiles(files = [ctx.file._openocd])
+    runfiles = ctx.runfiles(files = [ctx.file._openocd] )
     return [DefaultInfo(executable = script, runfiles = runfiles)]
 
 openocd_debug_server = rule(

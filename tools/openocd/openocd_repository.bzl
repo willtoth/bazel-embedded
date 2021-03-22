@@ -1,8 +1,8 @@
 def _get_platform_specific_config(os_name):
     _WINDOWS = {
-        "sha256": "1fb26bbcfd65dbabe747ce3c8467a1f1cece7253bde4a95de13c2267d422ed8b",
-        "prefix": "xpack-openocd-0.10.0-14",
-        "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.10.0-14/xpack-openocd-0.10.0-14-win32-x64.zip",
+        "sha256": "b195e3c3e9fe3f4fe9dfd9780ff08336ef8ed3015a76cc883d9e21e57c456f33",
+        "prefix": "",
+        "url": "https://github.com/ntfreak/openocd/releases/download/v0.11.0/openocd-v0.11.0-i686-w64-mingw32.tar.gz",
     }
     _PLATFORM_SPECIFIC_CONFIGS = {
         "mac os x": {
@@ -45,8 +45,8 @@ def _openocd_repository_impl(repository_ctx):
     executable_extension = ""
     if "windows" in repository_ctx.os.name:
         executable_extension = ".exe"
-    repository_ctx.symlink("bin/openocd"+ executable_extension, "openocd" )
 
+    repository_ctx.symlink("bin/openocd"+ executable_extension, "openocd" )
     repository_ctx.file(
         "BUILD",
         content = """
