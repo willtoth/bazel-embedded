@@ -1,19 +1,19 @@
 def _get_platform_specific_config(os_name):
     _WINDOWS = {
-        "sha256": "1fb26bbcfd65dbabe747ce3c8467a1f1cece7253bde4a95de13c2267d422ed8b",
-        "prefix": "xpack-openocd-0.10.0-14",
-        "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.10.0-14/xpack-openocd-0.10.0-14-win32-x64.zip",
+        "sha256": "5cba78c08ad03aa38549e94186cbb4ec34c384565a40a6652715577e4f1a458f",
+        "prefix": "xpack-openocd-0.12.0-1",
+        "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-1/xpack-openocd-0.12.0-1-win32-x64.zip",
     }
     _PLATFORM_SPECIFIC_CONFIGS = {
         "mac os x": {
-            "sha256": "30917a5c6f60fcd7df82b41dcec8ab7d86f0cea3caeaf98b965b901c10a60b39",
-            "prefix": "xpack-openocd-0.10.0-14",
-            "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.10.0-14/xpack-openocd-0.10.0-14-darwin-x64.tar.gz",
+            "sha256": "ca569b6bfd9b3cd87a5bc88b3a33a5c4fe854be3cf95a3dcda1c194e8da9d7bb",
+            "prefix": "xpack-openocd-0.12.0-1",
+            "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-1/xpack-openocd-0.12.0-1-darwin-x64.tar.gz",
         },
         "linux": {
-            "sha256": "185c070f9729cf38dca08686c2905561c07a63c563e5bc7a70e045f2a1865c11",
-            "prefix": "xpack-openocd-0.10.0-14",
-            "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.10.0-14/xpack-openocd-0.10.0-14-linux-x64.tar.gz",
+            "sha256": "940f22eccddb0946b69149d227948f77d5917a2c5f1ab68e5d84d614c2ceed20",
+            "prefix": "xpack-openocd-0.12.0-1",
+            "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-1/xpack-openocd-0.12.0-1-linux-x64.tar.gz",
         },
         "windows": _WINDOWS,
         "windows server 2019": _WINDOWS,
