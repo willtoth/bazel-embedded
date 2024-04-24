@@ -18,6 +18,7 @@ def _get_platform_specific_config(os_name):
         "windows": _WINDOWS,
         "windows server 2019": _WINDOWS,
         "windows 10": _WINDOWS,
+        "windows 11": _WINDOWS,
     }
     if os_name not in _PLATFORM_SPECIFIC_CONFIGS.keys():
         fail("OS configuration not available for:", os_name)

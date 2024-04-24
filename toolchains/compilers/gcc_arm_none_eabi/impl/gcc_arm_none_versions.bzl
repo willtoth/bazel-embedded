@@ -41,6 +41,7 @@ _PLATFORM_SPECIFIC_CONFIGS_9 = {
     "windows": _WINDOWS_9,
     "windows server 2019": _WINDOWS_9,
     "windows 10": _WINDOWS_9,
+    "windows 11": _WINDOWS_9,
     "mac os x": {
         "full_version": "9.2.1",
         "remote_compiler": {
@@ -72,6 +73,7 @@ _PLATFORM_SPECIFIC_CONFIGS_11 = {
     "windows": _WINDOWS_11,
     "windows server 2019": _WINDOWS_11,
     "windows 10": _WINDOWS_11,
+    "windows 11": _WINDOWS_11,
     "mac os x": {
         "full_version": "11.3.rel1",
         "remote_compiler": {
@@ -103,6 +105,7 @@ _PLATFORM_SPECIFIC_CONFIGS_12 = {
     "windows": _WINDOWS_12,
     "windows server 2019": _WINDOWS_12,
     "windows 10": _WINDOWS_12,
+    "windows 11": _WINDOWS_12,
     "mac os x": {
         "full_version": "12.2.rel1",
         "remote_compiler": {
