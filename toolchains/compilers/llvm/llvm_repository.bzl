@@ -1,6 +1,9 @@
 load("//toolchains/compilers/llvm/impl:llvm_versions.bzl", "TOOLCHAIN_VERSIONS", "get_platform_specific_config")
 load("//toolchains/tools/include_tools:include_tools.bzl", "include_tools")
 
+def _get_resource_directory(repository_ctx):
+    return repository_ctx.execute(["bin/clang++", "-print-resource-dir"]).stdout.strip()
+
 def _llvm_repository_impl(repository_ctx):
     version = repository_ctx.attr.version
     if "windows" not in repository_ctx.os.name:
@@ -29,14 +32,19 @@ def _llvm_repository_impl(repository_ctx):
         sysroot_args,
     ))
     include_paths = include_tools.ProccessResponse(response.stderr)
-    include_flags = ["-isystem" + path for path in include_paths]
+    include_paths.append(
+        _get_resource_directory(repository_ctx),
+    )
+    include_flags = []
+    for include_path in include_paths:
+        include_flags += ["-isystem", include_path]
     include_bazel_template_input = include_tools.CommandLineToTemplateString(include_flags)
     include_paths_template_input = include_tools.CommandLineToTemplateString(include_paths)
     repository_ctx.file(
         "defs.bzl",
         """
 SYSTEM_INCLUDE_COMMAND_LINE = {}
-SYSTEM_INCLUDE_PATHS= {}
+SYSTEM_INCLUDE_PATHS = {}
 SYSTEM_SYSROOT = "{}"
 """.format(include_bazel_template_input, include_paths_template_input, sysroot_path),
     )
@@ -59,8 +67,8 @@ llvm_repository = repository_rule(
     _llvm_repository_impl,
     attrs = {
         "version": attr.string(
-            default = "11",
-            doc = "LLVM version, version 11 currently only version supported",
+            default = "14",
+            doc = "LLVM version, version 11 and 14 currently only version supported",
             values = TOOLCHAIN_VERSIONS.keys(),
         ),
         "sysroot": attr.label(

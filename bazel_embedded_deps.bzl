@@ -7,14 +7,15 @@ load("@bazel_embedded//toolchains/upstream:toolchain_upstream_deps.bzl", "toolch
 def bazel_embedded_deps():
     """ bazel_embedded_deps downloads and setups up the required thirdy party dependencies """
 
-    #if not native.existing_rule("platforms"):
-    # TODO: add the above if statement back when cortex-m constraint values are added to mainline bazel
-    git_repository(
-        name = "platforms",
-        remote = "https://github.com/curtin-space/platforms.git",
-        commit = "a9fb73e46ab4a7558d53d65ed8e608724f07d4cc",
-        shallow_since = "1585009972 +0800",
-    )
+    if not native.existing_rule("platforms"):
+        http_archive(
+            name = "platforms",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.4/platforms-0.0.4.tar.gz",
+                "https://github.com/bazelbuild/platforms/releases/download/0.0.4/platforms-0.0.4.tar.gz",
+            ],
+            sha256 = "079945598e4b6cc075846f7fd6a9d0857c33a7afc0de868c2ccb96405225135d",
+        )
 
     if not native.existing_rule("bazel_embedded_upstream_toolchain"):
         toolchain_upstream_deps()
@@ -38,14 +39,14 @@ def bazel_embedded_deps():
     if not native.existing_rule("com_github_wjwwood_serial"):
         http_archive(
             name = "com_github_wjwwood_serial",
-            sha256 = "55381e43ddf0920c955994fa5f519f95e867ea4e4280a2cf55c4dfd3266b19c0",
-            strip_prefix = "serial-8068164faa1a48e18deaf6a15db7950a09b30b9e",
-            urls = ["https://github.com/silvergasp/serial/archive/8068164faa1a48e18deaf6a15db7950a09b30b9e.zip"],
+            sha256 = "dd5f53ba9338ff2e9a3dea36f3375414e85b64a81a22066a3ff3076630a5f70d",
+            strip_prefix = "serial-586ff7a40f20d1d19d04987ae95289395c73195b",
+            urls = ["https://github.com/bazelembedded/serial/archive/586ff7a40f20d1d19d04987ae95289395c73195b.zip"],
         )
     if not native.existing_rule("com_github_jarro_cxxopts"):
         http_archive(
             name = "com_github_jarro_cxxopts",
             sha256 = "fbee4be13a388dd4164865d707a7062a3051a8c83c4f30c56ef9616bdf202210",
             strip_prefix = "cxxopts-5e323d648e50b43fd430fb324c632dafd73f7add",
-            urls = ["https://github.com/silvergasp/cxxopts/archive/5e323d648e50b43fd430fb324c632dafd73f7add.zip"],
+            urls = ["https://github.com/jarro2783/cxxopts/archive/5e323d648e50b43fd430fb324c632dafd73f7add.zip"],
         )

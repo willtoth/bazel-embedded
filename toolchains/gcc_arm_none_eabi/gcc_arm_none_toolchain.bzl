@@ -104,6 +104,10 @@ def _gcc_arm_none_toolchain_config_info_impl(ctx):
             path = "gcc_wrappers/{os}/nm",
         ),
         tool_path(
+            name = "objcopy",
+            path = "gcc_wrappers/{os}/objcopy",
+        ),
+        tool_path(
             name = "objdump",
             path = "gcc_wrappers/{os}/objdump",
         ),
@@ -196,6 +200,7 @@ gcc_arm_none_toolchain_config = rule(
                 "armv6s-m",
                 "armv7-m",
                 "armv7e-m",
+                "armv8-m",
                 "armv8-m.base",
                 "armv8-m.main",
                 "iwmmxt",
@@ -315,7 +320,6 @@ def gcc_arm_none_toolchain(name, compiler_components, architecture, float_abi, e
         target_compatible_with = [
             "@platforms//cpu:" + architecture,
             "//constraints/fpu:" + fpu,
-            "@platforms//os:none",
         ],
         toolchain = ":" + name,
         toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
